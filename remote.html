@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>TV Remote</title>
+<style>
+  :root{--bg:#101318;--panel:#1a1f27;--btn:#262d38;--btn2:#323b49;--txt:#e8edf3;--dim:#8b96a5;--acc:#3fa7ff;--red:#e5484d;--grn:#30a46c}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.3 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;justify-content:center}
+  main{width:100%;max-width:420px;padding:16px 16px 40px}
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  h1{font-size:18px;margin:0}
+  #st{font-size:13px;color:var(--dim)}
+  #st b{color:var(--txt)}
+  .row{display:grid;gap:10px;margin-bottom:10px}
+  .c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}
+  button{background:var(--btn);color:var(--txt);border:0;border-radius:12px;padding:14px 6px;font-size:15px;font-weight:600;cursor:pointer;touch-action:manipulation;user-select:none}
+  button:active{background:var(--btn2);transform:scale(.97)}
+  button.on{background:var(--grn)} button.off{background:var(--red)} button.acc{background:var(--acc);color:#04121f}
+  .card{background:var(--panel);border-radius:16px;padding:12px;margin-bottom:12px}
+  .lbl{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px 2px}
+  .dpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .dpad button{padding:20px 6px;font-size:20px}
+  .dpad .ok{background:var(--acc);color:#04121f;border-radius:50%;aspect-ratio:1}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .rocker{display:grid;gap:8px}
+  .rocker span{text-align:center;font-size:12px;color:var(--dim)}
+  input{width:100%;background:var(--btn);border:0;border-radius:12px;color:var(--txt);font-size:18px;padding:13px;text-align:center}
+  #apps{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:260px;overflow:auto}
+  #apps button{font-weight:500;font-size:14px;text-align:left;padding:12px}
+  #toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#000c;padding:8px 14px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+  #toast.show{opacity:1}
+</style>
+</head>
+<body>
+<main>
+  <header><h1>TV Remote</h1><div id="st">TV: <b>...</b></div></header>
+
+  <div class="row c2">
+    <button class="on" data-power="on">Power On</button>
+    <button class="off" data-power="off">Power Off</button>
+  </div>
+
+  <div class="card">
+    <div class="dpad">
+      <button data-k="KEY_HOME">Home</button><button data-k="KEY_UP">&#9650;</button><button data-k="KEY_MENU">Menu</button>
+      <button data-k="KEY_LEFT">&#9664;</button><button class="ok" data-k="KEY_ENTER">OK</button><button data-k="KEY_RIGHT">&#9654;</button>
+      <button data-k="KEY_RETURN">Back</button><button data-k="KEY_DOWN">&#9660;</button><button data-k="KEY_EXIT">Exit</button>
+    </div>
+  </div>
+
+  <div class="card split">
+    <div class="rocker"><span>Volume</span><button data-k="KEY_VOLUP">Vol +</button><button data-k="KEY_MUTE">Mute</button><button data-k="KEY_VOLDOWN">Vol &minus;</button></div>
+    <div class="rocker"><span>Channel</span><button data-k="KEY_CHUP">Ch +</button><button data-k="KEY_PRECH">Prev</button><button data-k="KEY_CHDOWN">Ch &minus;</button></div>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Go to channel</p>
+    <div class="row c2" style="grid-template-columns:2fr 1fr;margin:0">
+      <input id="ch" inputmode="numeric" placeholder="e.g. 7 or 13-1" autocomplete="off">
+      <button class="acc" id="go">Go</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Keypad</p>
+    <div class="row c3" style="margin:0">
+      <button data-k="KEY_1">1</button><button data-k="KEY_2">2</button><button data-k="KEY_3">3</button>
+      <button data-k="KEY_4">4</button><button data-k="KEY_5">5</button><button data-k="KEY_6">6</button>
+      <button data-k="KEY_7">7</button><button data-k="KEY_8">8</button><button data-k="KEY_9">9</button>
+      <button data-k="KEY_CH_LIST">Ch List</button><button data-k="KEY_0">0</button><button data-k="KEY_ENTER">Enter</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Input &amp; info</p>
+    <div class="row c4" style="margin:0">
+      <button data-k="KEY_SOURCE">Source</button><button data-k="KEY_TV">TV</button><button data-k="KEY_INFO">Info</button><button data-k="KEY_GUIDE">Guide</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Playback</p>
+    <div class="row c4" style="margin:0">
+      <button data-k="KEY_REWIND">&#9194;</button><button data-k="KEY_PLAY">&#9654;</button><button data-k="KEY_PAUSE">&#10074;&#10074;</button><button data-k="KEY_FF">&#9193;</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="lbl">Apps <button id="loadapps" style="float:right;padding:4px 10px;font-size:12px">Load</button></p>
+    <div id="apps"><span style="color:var(--dim);font-size:14px">Tap Load (TV must be on)</span></div>
+  </div>
+</main>
+<div id="toast"></div>
+<script>
+const toast=(m)=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1400)};
+async function call(path,method='POST'){
+  try{const r=await fetch(path,{method});const j=await r.json();if(!r.ok)throw new Error(j.error||r.status);return j}
+  catch(e){toast(String(e.message||e).slice(0,80));throw e}
+}
+document.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>call('/api/key?k='+b.dataset.k).catch(()=>{})));
+document.querySelectorAll('[data-power]').forEach(b=>b.addEventListener('click',async()=>{
+  await call('/api/power?to='+b.dataset.power).catch(()=>{});toast(b.dataset.power==='on'?'Waking TV...':'Turning off');setTimeout(refresh,6000)}));
+const goCh=()=>{const v=document.getElementById('ch').value.trim();if(!v)return;call('/api/channel?n='+encodeURIComponent(v)).then(()=>toast('Channel '+v)).catch(()=>{})};
+document.getElementById('go').onclick=goCh;
+document.getElementById('ch').addEventListener('keydown',e=>{if(e.key==='Enter')goCh()});
+document.getElementById('loadapps').onclick=async()=>{
+  const box=document.getElementById('apps');box.textContent='Loading...';
+  try{const j=await call('/api/apps','GET');box.innerHTML='';
+    if(!j.apps.length){box.textContent='No apps returned';return}
+    j.apps.forEach(a=>{const b=document.createElement('button');b.textContent=a.name;
+      b.onclick=()=>call('/api/launch?id='+encodeURIComponent(a.id)).then(()=>toast('Opening '+a.name)).catch(()=>{});box.appendChild(b)})}
+  catch(e){box.textContent='Could not load apps'}};
+async function refresh(){try{const j=await call('/api/state','GET');document.querySelector('#st b').textContent=j.state==='on'?'On':j.state==='standby'?'Standby':'Off'}catch(e){}}
+refresh();setInterval(refresh,15000);
+</script>
+</body>
+</html>

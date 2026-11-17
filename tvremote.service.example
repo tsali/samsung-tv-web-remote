@@ -1,0 +1,17 @@
+[Unit]
+Description=Samsung TV web remote
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Environment=TV_IP=192.168.1.50
+Environment=TV_MAC=AA:BB:CC:DD:EE:FF
+#Environment=TV_TOKEN=
+Environment=PORT=8095
+ExecStart=/usr/bin/python3 /opt/samsung-tv-web-remote/server.py
+Restart=always
+RestartSec=5
+User=nobody
+
+[Install]
+WantedBy=multi-user.target
